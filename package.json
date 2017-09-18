@@ -1,0 +1,19 @@
+{
+  "name": "demo_geluidmodel",
+  "version": "1.0.0",
+  "description": "Demonstratie van 3D dataset voor geluidberekeningen",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Geodan/demo_geluidmodel.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Geodan/demo_geluidmodel/issues"
+  },
+  "homepage": "https://github.com/Geodan/demo_geluidmodel#readme"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "demo_geluidmodel",
+  "description": "Demonstratie van 3D dataset voor geluidberekeningen",
+  "main": "index.js",
+  "authors": [
+    "Tom van Tilburg <tom.van.tilburg@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/Geodan/demo_geluidmodel",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "x3d-elements": "https://github.com/GeodanElements/x3d-elements.git"
+  }
+}
