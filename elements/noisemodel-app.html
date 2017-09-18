@@ -115,16 +115,18 @@
 			 		<img src='../images/geodan.png' height='80px'>
 			 	</span>
 			</paper-toolbar>
+			
 			<x3d-viewer 
 				 map={{map}} 
 				 headlight=[[headlight]]
 				 hour=[[hourselected]]
 				 themeconfig=[[themeconfig]]>
-				 <inline url="../data/roofoutline.x3d"> </inline> 
+
+				 <inline id=roofplanes url="../data/roofs_lod2.x3d" load=true render=true> </inline> 
+				 <inline id=roofoutline url="../data/roofoutline.x3d" load=true render=true> </inline> 
 				<!--
 				<template is='dom-repeat' items=[[layers]]>
 					<transform id=[[item.name]]></transform>
-					
 					<x3d-layer 
 						active=[[item.active]] 
 						map=[[map]]
@@ -135,9 +137,9 @@
 						themeconfig=[[themeconfig]]
 						config=[[item.config]]
 						></x3d-layer>
-					
+						-->
 				</template>
-				-->
+				
 			</x3d-viewer>
 		</paper-header-panel>
 		</div>
@@ -186,8 +188,10 @@ Polymer({
 				var servicepath = 'http://localhost:8081/noisemodel3d';
 				var bgtpath = 'http://localhost:8081/noisemodel3d';
 				return [
-					{name: 'roofplanes',displayName: 'Buildings', active: false, hidden: false,url: servicepath},
-					{name: 'roofoutline',displayName: 'Outline', active: true, hidden: false,url: servicepath},
+					
+					{name: 'roofplanes',displayName: 'Buildings', active: false, hidden: false,url: "../data/roofs_lod2.x3d"},
+					{name: 'roofoutline',displayName: 'Outline', active: true, hidden: false,url: "../data/roofoutline.x3d"},
+					/*
 					{name: 'buildings',displayName: 'LOD1', active: false, hidden: false,url: servicepath},
 					{name: 'buildup',displayName: 'Buildup', active: true, hidden: false,url: servicepath},
 					{name: 'water', 	displayName: 'Water', active: true, hidden: false,url: servicepath},
@@ -196,7 +200,7 @@ Polymer({
 					{name: 'treepoints',displayName: 'Bomen (punten)', active: false, hidden: false,url: servicepath},
 					{name: 'buildingpoints',displayName: 'Panden (punten)', active: false, hidden: false,url: servicepath},
 					{name: 'kade', 		displayName: 'Kade', active: false, hidden: false,url: servicepath},
-					
+					*/
 				
 				];
 			}
