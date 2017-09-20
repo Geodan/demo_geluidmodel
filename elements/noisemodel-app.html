@@ -130,12 +130,14 @@ Polymer({
 			type: Array,
 			value: function(){
 				return [
-					{name: 'roofplanes',displayName: 'Buildings', active: false, hidden: false,url: "../data/roofs_lod2.x3d"},
+					{name: 'roofplanes',displayName: 'Buildings LOD2', active: false, hidden: false,url: "../data/roofs_lod2.x3d"},
+					{name: 'buildings',displayName: 'Buildings LOD1', active: true, hidden: false,url: "../data/roofs_lod1.x3d"},
 					{name: 'roofoutline',displayName: 'Outline', active: true, hidden: false,url: "../data/roofoutline.x3d"},
+					{name: 'water', 	displayName: 'Water', active: true, hidden: false,url: "../data/water.x3d"},
 					/*
 					{name: 'buildings',displayName: 'LOD1', active: false, hidden: false,url: servicepath},
 					{name: 'buildup',displayName: 'Buildup', active: true, hidden: false,url: servicepath},
-					{name: 'water', 	displayName: 'Water', active: true, hidden: false,url: servicepath},
+					
 					{name: 'terrain', 	displayName: 'Terrein', active: false, hidden: false,url: servicepath},
 					{name: 'roads', 	displayName: 'Wegen', active: false, hidden: false,url: servicepath},
 					{name: 'treepoints',displayName: 'Bomen (punten)', active: false, hidden: false,url: servicepath},
