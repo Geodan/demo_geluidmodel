@@ -16,6 +16,8 @@
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
 
 <link rel="import" href="../bower_components/x3d-elements/x3d-viewer.html">
 <link rel="import" href="../bower_components/x3d-elements/x3d-inlinelayer.html">
@@ -44,18 +46,36 @@
  	<paper-drawer-panel id='menu'>
 		<div drawer>
 			<paper-toolbar class="medium-tall">
-			<div class="title">X3D viewer</div>
+			<div class="title">3D geluidmodel</div>
 			<paper-tabs  class="bottom" selected="{{tabselected}}">
-				<paper-tab>Layers</paper-tab>
-				<paper-tab>Scene</paper-tab>
+				<paper-tab>Lagen</paper-tab>
+				<paper-tab>Instellingen</paper-tab>
 			</paper-tabs>
 			</paper-toolbar>
 			
 			<iron-pages selected=[[tabselected]]>
 				<div>
-					<template is='dom-repeat' items=[[layers]]>
+					<!--
+					<paper-radio-group selected="{{lodselected}}">
+					<paper-radio-button name='lod1'>LOD1
+							</paper-radio-button>
+					<template is='dom-repeat' items=[[lod1layers]]>
 						<paper-item>
-							<paper-checkbox   on-change='layertoggle' checked=[[item.active]]>
+							<paper-checkbox   on-change='layertoggle' checked=[[item.active]] disabled=[[item.hidden]]>
+									</paper-checkbox>
+							<paper-item-body>
+								<div class="layout horizontal">
+									<span class='flex'>[[item.displayName]]</span>
+									<paper-spinner active=[[item.loading]]></paper-spinner>
+								</div>
+							</paper-item-body>
+						</paper-item>
+					</template>
+					<paper-radio-button name='lod2'>LOD2
+						</paper-radio-button>
+					<template is='dom-repeat' items=[[lod2layers]]>
+						<paper-item>
+							<paper-checkbox   on-change='layertoggle' checked=[[item.active]] disabled=[[item.hidden]]>
 									</paper-checkbox>
 							<paper-item-body>
 								<div class="layout horizontal">
@@ -66,6 +86,22 @@
 							
 						</paper-item>
 					</template>
+					</paper-radio-group>
+				-->
+					<template is='dom-repeat' items=[[extralayers]]>
+							<paper-item>
+								<paper-checkbox on-change='layertoggle' checked=[[item.active]] disabled=[[item.hidden]]>
+										</paper-checkbox>
+								<paper-item-body  two-line>
+									<div class="layout horizontal">
+										<span class='flex'>[[item.displayName]]</span>
+										<paper-spinner active=[[item.loading]]></paper-spinner>
+									</div>
+									<div secondary>[[item.description]]</div>
+								</paper-item-body>
+								
+							</paper-item>
+						</template>
 				</div>
 				<div>
 					 Nothing here...
@@ -77,7 +113,7 @@
 		<paper-header-panel class="flex">
 			<paper-toolbar class="medium-tall white" justify='justified'>
 			 	<span class='title'>
-			 		<img src='../images/geodan.png' height='80px'>
+			 		<img src='./images/geodan.png' height='80px'>
 			 	</span>
 			</paper-toolbar>
 			
@@ -85,10 +121,7 @@
 				 map={{map}} 
 			>
 			<!--
-				 <inline id=roofplanes url="../data/roofs_lod2.x3d" load=true render=true> </inline> 
-				 <inline id=roofoutline url="../data/roofoutline.x3d" load=true render=true> </inline>
-			-->	
-				<template is='dom-repeat' items=[[layers]]>
+				<template is='dom-repeat' items=[[lod1layers]]>
 					<inline id=[[item.name]]> </inline>
 					<x3d-inlinelayer 
 						render=[[item.active]] 
@@ -100,6 +133,31 @@
 						></x3d-inlinelayer>
 				
 				</template>
+				<template is='dom-repeat' items=[[lod2layers]]>
+						<inline id=[[item.name]]> </inline>
+						<x3d-inlinelayer 
+							render=[[item.active]] 
+							map=[[map]]
+							on-loading='_loading'
+							on-loaded='_loaded'
+							url=[[item.url]] 
+							name=[[item.name]]
+							></x3d-inlinelayer>
+					
+					</template>
+			-->
+				<template is='dom-repeat' items=[[extralayers]]>
+							<inline id=[[item.name]]> </inline>
+							<x3d-inlinelayer 
+								render=[[item.active]] 
+								map=[[map]]
+								on-loading='_loading'
+								on-loaded='_loaded'
+								url=[[item.url]] 
+								name=[[item.name]]
+								></x3d-inlinelayer>
+						
+						</template>
 				
 			</x3d-viewer>
 		</paper-header-panel>
@@ -118,6 +176,11 @@ Polymer({
 			type: Number,
 			value: 0
 		},
+		lodselected: {
+			type: String,
+			value: 'lod1',
+			observer: 'lodtoggle'
+		},
 		selectedLayers: {
 			type: Array
 			//observer: '_selectedLayersChanged'
@@ -126,29 +189,47 @@ Polymer({
 			type: Object,
 			observer: '_mapChanged'
 		},
-		layers: {
+		lod1layers: {
 			type: Array,
 			value: function(){
 				return [
-					{name: 'roofplanes',displayName: 'Buildings LOD2', active: false, hidden: false,url: "./data/roofs_lod2.x3d"},
-					{name: 'buildings',displayName: 'Buildings LOD1', active: true, hidden: false,url: "./data/roofs_lod1.x3d"},
-					{name: 'roofoutline',displayName: 'Outline', active: true, hidden: false,url: "./data/roofoutline.x3d"},
-					{name: 'water', 	displayName: 'Water', active: true, hidden: false,url: "./data/water.x3d"},
+					{name: 'buildings',displayName: 'Buildings LOD1', active: true, hidden: true,url: "./data/roofs_lod1.x3d"},
+					{name: 'water', displayName: 'Water', active: true, hidden: true,url: "./data/water.x3d"},
+					{name: 'buildup',displayName: 'Breaklines', active: true, hidden: true,url: "./data/buildup.x3d"},
+				]
+			}
+		},
+		lod2layers: {
+			type: Array,
+			value: function(){
+				return [
+					{name: 'roofplanes',displayName: 'Buildings LOD2', active: false, hidden: true,url: "./data/roofs_lod2.x3d"},
+					{name: 'water', 	displayName: 'Water', active: false, hidden: true,url: "./data/water.x3d"},
+					{name: 'terrain', 	displayName: 'Terrein', active: false, hidden: true,url: "./data/terrain.x3d"},
+				];
+			}
+		},
+		extralayers: {
+			type: Array,
+			value: function(){
+				return [
+					{name: 'buildingslod1',displayName: 'Panden detail 1', description: 'Verkennende geluidsstudies', 	active: true, hidden: false,url: "./data/roofs_lod1.x3d"},
+					{name: 'buildingslod1plus',displayName: 'Panden detail 1+', description: 'Standaard Rekenmethode 2', 	active: false, hidden: true,url: "./data/roofs_lod1plus.x3d"},
+					{name: 'buildingslod2',displayName: 'Panden detail 2', description: '3D Visualisatie' ,			active: false, hidden: false,url: "./data/roofs_lod2.x3d"},
+					{name: 'hardzacht', displayName: 'Hard/Zacht gebieden', description: 'Standaard Rekenmethode 2',active: false, hidden: true,url: "./data/hardzacht.x3d"},
+					{name: 'buildup',displayName: 'Hoogtelijnen', description: 'Standaard Rekenmethode 2', 			active: true, hidden: false,url: "./data/buildup.x3d"},
+					{name: 'terrain', 	displayName: 'Ondergrond BGT', description: '3D Visualisatie', 				active: false, hidden: true,url: "./data/terrain.x3d"},
+					{name: 'roofoutline',displayName: 'Gebouwlijnen', description: '',		active: false, hidden: false,url: "./data/roofoutline.x3d"},
+					{name: 'buildingpoints',displayName: 'Panden puntenwolk', description: '3D Visualisatie',active: false, hidden: false,url: "./data/buildingpoints.x3d"},
+					{name: 'treepoints',displayName: 'Bomen puntenwolk', description: '3D Visualisatie',active: false, hidden: true,url: "./data/treepoints.x3d"},
 					/*
-					{name: 'buildings',displayName: 'LOD1', active: false, hidden: false,url: servicepath},
-					{name: 'buildup',displayName: 'Buildup', active: true, hidden: false,url: servicepath},
-					
-					{name: 'terrain', 	displayName: 'Terrein', active: false, hidden: false,url: servicepath},
-					{name: 'roads', 	displayName: 'Wegen', active: false, hidden: false,url: servicepath},
 					{name: 'treepoints',displayName: 'Bomen (punten)', active: false, hidden: false,url: servicepath},
-					{name: 'buildingpoints',displayName: 'Panden (punten)', active: false, hidden: false,url: servicepath},
 					{name: 'kade', 		displayName: 'Kade', active: false, hidden: false,url: servicepath},
 					*/
 				
 				];
 			}
-			
-		},
+		}
 		
 		
 	},
@@ -156,13 +237,13 @@ Polymer({
 	],
 	_loading: function(a,b){
 		var item = a.model.item;
-		var idx = this.layers.indexOf(a.model.item);
-		this.set('layers.'+idx+'.loading',true);
+		//var idx = this.layers.indexOf(a.model.item);
+		//this.set('layers.'+idx+'.loading',true);
 	},
 	_loaded: function(a,b){
 		var item = a.model.item;
-		var idx = this.layers.indexOf(a.model.item);
-		this.set('layers.'+idx+'.loading',false);
+		//var idx = this.layers.indexOf(a.model.item);
+		//this.set('layers.'+idx+'.loading',false);
 	},
 
 	_isActive: function(item){
@@ -171,20 +252,54 @@ Polymer({
 	_isnothidden: function(item){
 		return !item.hidden;
 	},
+	/*
+	lodtoggle: function(e,d){
+		var self= this;
+		if (e=='lod1' && this.lod1layers){
+			this.lod1layers.forEach(d=>{
+				self.set('lod1layers.'+i+'.active',status);
+				d.active = true;})
+			this.lod2layers.forEach(d=>{d.active = false;})
+		}
+		if (e=='lod2' && this.lod2layers){
+			this.lod1layers.forEach(d=>{d.active = false;})
+			this.lod2layers.forEach(d=>{d.active = true;})
+		}
+	},*/
 	layertoggle: function(e,d){
 		var self = this;
 		var status = e.target.checked;
 		var layername = e.model.item.name;
-		var layer = this.layers.forEach(function(l,i){
+		this.lod1layers.forEach(function(l,i){
 				if (l.name == layername){
-					//var status = l.active?false:true; 
-					self.set('layers.'+i+'.active',status);
-					//l.active = status;
+					self.set('lod1layers.'+i+'.active',status);
+				}
+		});
+		this.lod2layers.forEach(function(l,i){
+				if (l.name == layername){
+					self.set('lod2layers.'+i+'.active',status);
+				}
+		});
+		this.extralayers.forEach(function(l,i){
+				if (l.name == layername){
+					self.set('extralayers.'+i+'.active',status);
 				}
 		});
 	},
 	_mapChanged: function(map){
 		this._flyTo([122480.60,489444.97],200); //Distelbuurt
+		/*
+		d3.select('#navInfo').attr('type','turntable')
+		.attr('type',"turntable") 
+		.attr('typeParams',"0.0 0.0 0 3")
+		.attr('headlight',"true")
+		.attr('explorationMode',"all")
+		.attr('avatarSize',"0.25,1.6,0.75")
+		.attr('walkDamping',"2")
+		.attr('speed',"1")
+		.attr('transitionTime',"1")
+		.attr('transitionType',"LINEAR");
+		*/
 	},
 
 	_flyTo: function(coords,r){
