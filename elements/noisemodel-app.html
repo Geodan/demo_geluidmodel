@@ -17,9 +17,8 @@
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 
-<link rel="import" href="../bower_components/gm-elements/gm-geosearch.html">
-
 <link rel="import" href="../bower_components/x3d-elements/x3d-viewer.html">
+<link rel="import" href="../bower_components/x3d-elements/x3d-inlinelayer.html">
 
 
 <dom-module id="main-app">
@@ -54,7 +53,7 @@
 			
 			<iron-pages selected=[[tabselected]]>
 				<div>
-					<template is='dom-repeat' items=[[layers]] observe="loading" filter="_isnothidden">
+					<template is='dom-repeat' items=[[layers]]>
 						<paper-item>
 							<paper-checkbox   on-change='layertoggle' checked=[[item.active]]>
 									</paper-checkbox>
@@ -69,41 +68,7 @@
 					</template>
 				</div>
 				<div>
-					
-						<paper-listbox selected={{viewselected}} attr-for-selected="name" class="dropdown-content">
-							<paper-item name='viewpoint'>Top view</paper-item>
-							<paper-item name='Northwards'>North</paper-item>
-							<paper-item name='Southwards'>South</paper-item>
-							<paper-item name='leiden1'>View 1</paper-item>
-							<paper-item name='leiden2'>View 2</paper-item>
-							<paper-item name='leiden3'>View 3</paper-item>
-						</paper-listbox>
-					
-					<paper-dropdown-menu label="Time of day">
-						<paper-listbox selected={{hourselected}} attr-for-selected="value" class="dropdown-content">
-							<paper-item value='8'>Morning</paper-item>
-							<paper-item value='12'>Noon</paper-item>
-							<paper-item value='17'>Afternoon</paper-item>
-							<paper-item value='24'>Night</paper-item>
-						</paper-listbox>
-					</paper-dropdown-menu>
-					<paper-dropdown-menu label="Theme">
-						<paper-listbox selected={{themeselected}} attr-for-selected="name" class="dropdown-content">
-							<paper-item name='gray'>Gray</paper-item>
-							<paper-item name='light'>Light</paper-item>
-							<paper-item name='functional'>Functional</paper-item>
-						</paper-listbox>
-					</paper-dropdown-menu>
-
-					<paper-item><paper-toggle-button active checked={{headlight}}>Headlight</paper-toggle-button></paper-item>
-					<gm-geosearch id="geosearch"></gm-geosearch>
-					<paper-dropdown-menu label="Goto">
-						<paper-listbox selected={{locationselected}} attr-for-selected="value" class="dropdown-content">
-							<template is='dom-repeat' items=[[locations]]>
-								<paper-item value=[[item.coords]]>[[item.name]]</paper-item>
-							</template>
-						</paper-listbox>
-					</paper-dropdown-menu>
+					 Nothing here...
 				</div>
 			</iron-pages>
 			
@@ -118,26 +83,22 @@
 			
 			<x3d-viewer 
 				 map={{map}} 
-				 headlight=[[headlight]]
-				 hour=[[hourselected]]
-				 themeconfig=[[themeconfig]]>
-
+			>
+			<!--
 				 <inline id=roofplanes url="../data/roofs_lod2.x3d" load=true render=true> </inline> 
-				 <inline id=roofoutline url="../data/roofoutline.x3d" load=true render=true> </inline> 
-				<!--
+				 <inline id=roofoutline url="../data/roofoutline.x3d" load=true render=true> </inline>
+			-->	
 				<template is='dom-repeat' items=[[layers]]>
-					<transform id=[[item.name]]></transform>
-					<x3d-layer 
-						active=[[item.active]] 
+					<inline id=[[item.name]]> </inline>
+					<x3d-inlinelayer 
+						render=[[item.active]] 
 						map=[[map]]
 						on-loading='_loading'
 						on-loaded='_loaded'
 						url=[[item.url]] 
 						name=[[item.name]]
-						themeconfig=[[themeconfig]]
-						config=[[item.config]]
-						></x3d-layer>
-						-->
+						></x3d-inlinelayer>
+				
 				</template>
 				
 			</x3d-viewer>
@@ -157,26 +118,9 @@ Polymer({
 			type: Number,
 			value: 0
 		},
-        viewselected: {
-        	type: Number,
-        	value: 'viewpoint',
-        	observer: '_selectedviewchanged'
-        },
-        locationselected: {
-        	type: String,
-        	observer: '_selectedlocationchanged'
-        },
 		selectedLayers: {
 			type: Array
 			//observer: '_selectedLayersChanged'
-		},
-		headlight: {
-			type: Boolean,
-			value: false
-		},
-		hourselected: {
-			type: Number,
-			value: 8
 		},
 		map: {
 			type: Object,
@@ -185,10 +129,7 @@ Polymer({
 		layers: {
 			type: Array,
 			value: function(){
-				var servicepath = 'http://localhost:8081/noisemodel3d';
-				var bgtpath = 'http://localhost:8081/noisemodel3d';
 				return [
-					
 					{name: 'roofplanes',displayName: 'Buildings', active: false, hidden: false,url: "../data/roofs_lod2.x3d"},
 					{name: 'roofoutline',displayName: 'Outline', active: true, hidden: false,url: "../data/roofoutline.x3d"},
 					/*
@@ -206,76 +147,8 @@ Polymer({
 			}
 			
 		},
-		locations: {
-			type: Array,
-			value: function(){
-				return [
-				//{coords: [120490.34,488995.36],bbox: ''  ,name: 'Polanenbuurt'}
-				{coords: [124048.38,487915.59],bbox: ''  ,name: 'Java eiland'}
-				] 
-			}
-		},
-		themeconfig: {
-			type: Object,
-			value: function(){
-				return {
-					gray: {
-					 materials: {
-						 
-					 	tree: { emissiveColor: 'darkolivegreen'},
-					 	breakline: {diffuseColor: 'white',transparency: '0'},
-						building: {diffuseColor: 'salmon',transparency: '0'},
-						water: {specularColor: 'ivory', diffuseColor: 'powderblue', shininess: '1'},
-						voetpad: {diffuseColor: 'gray'},
-						rijbaan_lokale_weg: {diffuseColor: 'gray'},
-						open_verharding:{diffuseColor: 'gray'},
-						erf:{diffuseColor: 'khaki'},
-						groenvoorziening:{diffuseColor: 'yellowgreen'},
-						'gemengd bos':{diffuseColor: 'forestgreen'},
-						struiken: {diffuseColor: 'darkgreen'},
-						dek:{diffuseColor: 'gray'},
-						pijler: {diffuseColor: 'gray'},
-						light: {emissiveColor: 'yellow', transparency: 0},
-						post: {diffuseColor: 'gray'},
-						roof: {diffuseColor: 'orange'},
-						pand: {diffuseColor: 'orange'},
-						scene: {skyColor: '0.4 0.6 0.8'},
-						zand: {diffuseColor: 'yellow'},
-						facade: {transparency: 0},
-						contour: {transparency: 0}
-					 }
-					},
-					light: {
-					  materials: {
-						building: {diffuseColor: 'white'},
-						water: {specularColor: '0.823529 0.705882 0.54902', diffuseColor: '0.9 1 1', shininess: '1'},
-						light: {emissiveColor: 'black', transparency: 1},
-						scene: {skyColor: '0.4 0.6 0.8'},
-						erf:{diffuseColor: 'white'},
-					  }
-					},
-					functional: {
-						materials: {
-							fietspad:{diffuseColor: 'brown'},
-							inrit: {diffuseColor: 'gray'},
-							'OV-baan':{diffuseColor: 'gray'},
-							overweg:{diffuseColor: 'gray'},
-							parkeervlak:{diffuseColor: 'gray'},
-							'rijbaan autosnelweg': {diffuseColor: 'gray'},
-							'rijbaan autoweg': {diffuseColor: 'gray'},
-							'rijbaan lokale weg':{diffuseColor: 'gray'},
-							'rijbaan regionale weg':{diffuseColor: 'gray'},
-							spoorbaan:{diffuseColor: 'darkGray'},
-							transitie:{diffuseColor: 'purple'},
-							voetgangersgebied:{diffuseColor: 'white'},
-							voetpad:{diffuseColor: 'white'},
-							'voetpad op trap':{diffuseColor: 'white'},
-							woonerf:{diffuseColor: 'gray'},
-						}
-					}
-				}
-			}
-		}
+		
+		
 	},
 	observers: [
 	],
@@ -296,12 +169,6 @@ Polymer({
 	_isnothidden: function(item){
 		return !item.hidden;
 	},
-	_selectedviewchanged: function(view){
-		 document.getElementById(view).setAttribute('set_bind','true');         
-	},
-	_selectedlocationchanged: function(coords){
-		this._flyTo(coords);
-	},
 	layertoggle: function(e,d){
 		var self = this;
 		var status = e.target.checked;
@@ -317,33 +184,7 @@ Polymer({
 	_mapChanged: function(map){
 		this._flyTo([122480.60,489444.97],200); //Distelbuurt
 	},
-	viewFunc: function(evt){
-	
-		// show viewpoint values
-		if (evt)
-		{
-			var pos = evt.position;
-			var rot = evt.orientation;
-			var mat = evt.matrix;
-		
-			var camPos = pos.x.toFixed(4)+' '+pos.y.toFixed(4)+' '+pos.z.toFixed(4);
-			var camRot = rot[0].x.toFixed(4)+' '+rot[0].y.toFixed(4)+' '+rot[0].z.toFixed(4)+' '+rot[1].toFixed(4);
-			//console.log(camRot);
-			//document.getElementById("viewMat").innerHTML = "&ltViewpoint position='" + 
-															camPos + "' orientation='" + camRot + "'&gt";
-		}
-		
-		// update 2d marker also if camera changes since projection is now wrong
-		/*
-		var trans = x3d.fields.SFVec3f.parse(document.getElementById('bar').getAttribute("translation"));
-		var pos2d = runtime.calcPagePos(trans.x, trans.y, trans.z);
-		var anno = document.getElementById("anno2d");
-		
-		anno.innerHTML = "(" + pos2d[0] + ", " + pos2d[1] + ")";
-		anno.style.left = (pos2d[0]+1) + "px";
-		anno.style.top = (pos2d[1]+1) + "px";
-		*/
-	},
+
 	_flyTo: function(coords,r){
 		var radius = r || 100;
 		var x = coords[0];
@@ -370,31 +211,8 @@ Polymer({
 			.attr( "centerOfRotation", coords[0] + " " + coords[1] + " 0" )
 			.attr( "position", coords[0] + " " + coords[1] + " 550")
 			.attr('set_bind',true);
-		map.scene.select("#Northwards")
-			.attr( "centerOfRotation", coords[0] + " " + coords[1] + " 0" )
-			.attr( "position", coords[0] + " " + (coords[1] -300) + " 20");
-		map.scene.select("#Southwards")
-			.attr( "centerOfRotation", coords[0] + " " + coords[1] + " 0" )
-			.attr( "position", coords[0] + " " + (coords[1] +300) + " 20");
 		
-		map.scene.select("#front")
-			.attr( "centerOfRotation", coords[0] + " " + coords[1] + " 0" )
-			.attr( "position", coords[0] + " " + (coords[1]) + " 20");
-		map.scene.select("#right")
-			.attr( "centerOfRotation", coords[0] + " " + coords[1] + " 0" )
-			.attr( "position", coords[0] + " " + (coords[1]) + " 20");
-		map.scene.select("#left")
-			.attr( "centerOfRotation", coords[0] + " " + coords[1] + " 0" )
-			.attr( "position", coords[0] + " " + (coords[1]) + " 20");
-		map.scene.select("#top")
-			.attr( "centerOfRotation", coords[0] + " " + coords[1] + " 0" )
-			.attr( "position", coords[0] + " " + (coords[1]) + " 20");
-			
 		document.getElementById('viewpoint').addEventListener('viewpointChanged', this.viewFunc, false);
-		
-		map.scene.select('#pointlight')
-			.attr('location',coords[0] + " " + coords[1] + " 25");
-		
 	},
 	
 	ready: function(){
