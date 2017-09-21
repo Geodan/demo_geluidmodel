@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
 
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
@@ -10,9 +11,11 @@
 <link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
@@ -29,6 +32,19 @@
  paper-item {
  	 cursor: pointer;
  }
+ paper-button.indigo {
+    background-color: var(--paper-indigo-500);
+    color: white;
+    --paper-button-raised-keyboard-focus: {
+      background-color: var(--paper-pink-a200) !important;
+      color: white !important;
+    };
+ }
+	a paper-button,
+	a:active paper-button,
+	a:visited paper-button {
+		color: #FFF !important;
+	}
  paper-toolbar.white {
     --paper-toolbar-background: white;
     --paper-toolbar-title: {
@@ -40,6 +56,7 @@
  .title {
  	 margin-top: 10px; 
  }
+ 
  
  </style>
  <template>
@@ -95,13 +112,23 @@
 								<paper-item-body  two-line>
 									<div class="layout horizontal">
 										<span class='flex'>[[item.displayName]]</span>
-										<paper-spinner active=[[item.loading]]></paper-spinner>
+										<!--<paper-spinner active=[[item.loading]]></paper-spinner>-->
+										
 									</div>
 									<div secondary>[[item.description]]</div>
 								</paper-item-body>
-								
+								<template is='dom-if' if=[[item.downloadurl]]>
+									<a href=[[item.downloadurl]]>
+										<paper-icon-button icon="file-download" style="color: grey;"></paper-icon-button>
+									</a>
+								</template>
 							</paper-item>
 						</template>
+						<a href="./data/geomilieu.zip">
+						<paper-button raised class="indigo">
+							<iron-icon icon="file-download"></iron-icon>Geomilieu
+						</paper-button>
+						</a>
 				</div>
 				<div>
 					 Nothing here...
@@ -113,7 +140,7 @@
 		<paper-header-panel class="flex">
 			<paper-toolbar class="medium-tall white" justify='justified'>
 			 	<span class='title'>
-			 		<img src='./images/geodan.png' height='80px'>
+			 		<img src='../images/geodan.png' height='80px'>
 			 	</span>
 			</paper-toolbar>
 			
@@ -147,7 +174,7 @@
 					</template>
 			-->
 				<template is='dom-repeat' items=[[extralayers]]>
-							<inline id=[[item.name]]> </inline>
+							<inline id=[[item.name]] load='false'> </inline>
 							<x3d-inlinelayer 
 								render=[[item.active]] 
 								map=[[map]]
@@ -179,7 +206,7 @@ Polymer({
 		lodselected: {
 			type: String,
 			value: 'lod1',
-			observer: 'lodtoggle'
+			//observer: 'lodtoggle'
 		},
 		selectedLayers: {
 			type: Array
@@ -213,20 +240,15 @@ Polymer({
 			type: Array,
 			value: function(){
 				return [
-					{name: 'buildingslod1',displayName: 'Panden detail 1', description: 'Verkennende geluidsstudies', 	active: true, hidden: false,url: "./data/roofs_lod1.x3d"},
-					{name: 'buildingslod1plus',displayName: 'Panden detail 1+', description: 'Standaard Rekenmethode 2', 	active: false, hidden: true,url: "./data/roofs_lod1plus.x3d"},
-					{name: 'buildingslod2',displayName: 'Panden detail 2', description: '3D Visualisatie' ,			active: false, hidden: false,url: "./data/roofs_lod2.x3d"},
-					{name: 'hardzacht', displayName: 'Hard/Zacht gebieden', description: 'Standaard Rekenmethode 2',active: false, hidden: true,url: "./data/hardzacht.x3d"},
-					{name: 'buildup',displayName: 'Hoogtelijnen', description: 'Standaard Rekenmethode 2', 			active: true, hidden: false,url: "./data/buildup.x3d"},
-					{name: 'terrain', 	displayName: 'Ondergrond BGT', description: '3D Visualisatie', 				active: false, hidden: true,url: "./data/terrain.x3d"},
-					{name: 'roofoutline',displayName: 'Gebouwlijnen', description: '',		active: false, hidden: false,url: "./data/roofoutline.x3d"},
-					{name: 'buildingpoints',displayName: 'Panden puntenwolk', description: '3D Visualisatie',active: false, hidden: false,url: "./data/buildingpoints.x3d"},
-					{name: 'treepoints',displayName: 'Bomen puntenwolk', description: '3D Visualisatie',active: false, hidden: true,url: "./data/treepoints.x3d"},
-					/*
-					{name: 'treepoints',displayName: 'Bomen (punten)', active: false, hidden: false,url: servicepath},
-					{name: 'kade', 		displayName: 'Kade', active: false, hidden: false,url: servicepath},
-					*/
-				
+					{name: 'buildingslod1',displayName: 'Panden detail 1', description: 'Verkennende geluidsstudies', 	 active: false, hidden: false,url: "./data/roofs_lod1.x3d",downloadurl: "./data/roofs_lod1.zip"},
+					{name: 'buildingslod1plus',displayName: 'Panden detail 1+', description: 'Standaard Rekenmethode 2', active: false, hidden: true,url: "./data/roofs_lod1plus.x3d",downloadurl: "./data/roofs_lod1plus.zip"},
+					{name: 'buildingslod2',displayName: 'Panden detail 2', description: '3D Visualisatie' ,			active: false, hidden: false,url: "./data/roofs_lod2.x3d",downloadurl: "./data/roofs_lod2.zip"},
+					{name: 'hardzacht', displayName: 'Hard/Zacht gebieden', description: 'Standaard Rekenmethode 2',active: false, hidden: true,url: "./data/hardzacht.x3d",downloadurl: "./data/hardzacht.zip"},
+					{name: 'hoogtelijnen',displayName: 'Hoogtelijnen', description: 'Standaard Rekenmethode 2', 			active: false, hidden: false,url: "./data/hoogtelijnen.x3d",downloadurl: "./data/hoogtelijnen.zip"},
+					{name: 'terrain', 	displayName: 'Ondergrond BGT', description: '3D Visualisatie', 				active: false, hidden: false,url: "./data/terrain.x3d"},
+					{name: 'roofoutline',displayName: 'Gebouwlijnen', description: '3D Visualisatie',				active: false, hidden: false,url: "./data/roofoutline.x3d"},
+					//{name: 'buildingpoints',displayName: 'Panden puntenwolk', description: '3D Visualisatie',		active: false, hidden: false,url: "./data/buildingpoints.x3d"},
+					{name: 'treepoints',displayName: 'Bomen puntenwolk', description: '3D Visualisatie',			active: false, hidden: false,url: "./data/treepoints.x3d"},
 				];
 			}
 		}
