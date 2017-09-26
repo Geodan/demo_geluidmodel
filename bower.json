@@ -15,6 +15,7 @@
     "tests"
   ],
   "dependencies": {
+
     "Polymer": "~1.9",
     "iron-flex-layout": "~1",
     "iron-pages": "~1",
@@ -37,5 +38,6 @@
     "app-layout": "~1",
     "x3dom": "^1.7.2",
     "d3": "^4.10.2"
+
   }
 }
