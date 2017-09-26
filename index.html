@@ -18,11 +18,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <link rel="shortcut icon" sizes="32x32" href="./images/app-icon-32.png">
 
+  <link rel="stylesheet" type="text/css" href="./bower_components/x3dom/x3dom.css" />
+  <script src="./bower_components/x3dom/x3dom.js"></script>
+  <script src="./bower_components/webcomponentsjs/webcomponents-lite.js"></script>
   <meta name="theme-color" content="#fff">
   
 
   <script>
-
+/*
     // setup Polymer options
     window.Polymer = {lazyRegister: true};
 
@@ -39,7 +42,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         document.head.appendChild(e);
       }
     })();
-
+*/
 
   </script>
 
@@ -52,14 +55,69 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       font-family: 'Roboto', 'Noto', sans-serif;
       background-color: white;
     }
+    #x3delement {
+      width: 100%;
+      height: 100%;
+    }
     
 
   </style>
 
 </head>
 <body>
-
-  <main-app></main-app>
-
+  <main-app>
+      <x3d id="x3delement">
+          <Scene class='scene'>
+            <Environment 
+            frustumCulling=true 
+            lowPriorityCulling=true 
+            lowPriorityThreshold=0.5
+            shadowExcludeTransparentObjects=true
+          ></Environment>
+          <Fog 
+            visibilityRange='2000' 
+            fogType='LINEAR'
+            color='0.1843137254901961 0.3411764705882353 0.47058823529411764'
+          ></Fog>
+            <Background class="material" 
+              skyColor="0.1843137254901961 0.3411764705882353 0.47058823529411764"
+            ></Background>
+            <DirectionalLight 
+              direction="-0.2 -0.8 -0.4" 
+              intensity="0.7" 
+              shadowIntensity="0" 
+              color="1,1,1" 
+              on="true" 
+            ></DirectionalLight>
+              <NavigationInfo
+              id='navInfo'
+              headlight='true'
+              type='"examine" "any"'
+              typeParams='0.0 0.0 0.2 1.4'
+              transitionTime='4.0'
+              ></NavigationInfo>
+           
+           <ViewPoint id='viewpoint'
+                 centerOfRotation="122480.60 489444.97 0"
+                 position="122480.60 489444.97 550"
+             zNear=30
+             zFar=1000
+             orientation="0 0 0 0"
+             ></ViewPoint>
+            <transform translation='122480.60 489444.97 200'>
+            </transform>
+            <inline id="terrain"></inline>
+            <inline id='buildingslod1'></inline>
+						<inline id='buildingslod1plus'></inline>
+						<inline id='buildingslod2'></inline>
+						<inline id='hardzacht'></inline>
+						<inline id='hoogtelijnen'></inline>
+						<inline id='terrain'></inline>
+						<inline id='roofoutline'></inline>
+						<inline id='buildingpoints' render=false load=false></inline>
+						<inline id='treepoints'></inline>
+          </Scene>
+       </x3d>
+  </main-app>
 </body>
 </html>

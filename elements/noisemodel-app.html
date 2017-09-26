@@ -1,4 +1,4 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
@@ -7,9 +7,15 @@
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<!--
 <link rel="import" href="../bower_components/paper-header-panel/paper-header-panel.html">
 <link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
-<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+-->
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
@@ -22,90 +28,85 @@
 <link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
 
+<link rel="stylesheet" type="text/css" href="../bower_components/x3dom/x3dom.css" />
+<script src="../bower_components/x3dom/x3dom.js"></script>
+<!-- import CSS mixin shim -->
+<link rel="import" href="geodan-style.html">
+
 <link rel="import" href="../bower_components/x3d-elements/x3d-viewer.html">
 <link rel="import" href="../bower_components/x3d-elements/x3d-inlinelayer.html">
 
 
 <dom-module id="main-app">
-<style include="iron-flex iron-flex-alignment"></style> 
-<style>
- paper-item {
- 	 cursor: pointer;
- }
- paper-button.indigo {
-    background-color: var(--paper-indigo-500);
-    color: white;
-    --paper-button-raised-keyboard-focus: {
-      background-color: var(--paper-pink-a200) !important;
-      color: white !important;
-    };
- }
-	a paper-button,
-	a:active paper-button,
-	a:visited paper-button {
-		color: #FFF !important;
+<template>
+<style include="iron-flex iron-flex-alignment"></style>
+<style include="geodan-style">
+	
+
+	paper-button.geodan {
+		background:var(--geodan-button-normal);
+  		color:white;
+		--paper-button-ink-color: var(--geodan-button-pressed);
+		--paper-button-disabled: var(--geodan-button-disabled);
 	}
- paper-toolbar.white {
-    --paper-toolbar-background: white;
-    --paper-toolbar-title: {
-      font-style: italic;
-      font-weight: bold;
-    };
-    padding: 20px;
- }
- .title {
- 	 margin-top: 10px; 
- }
- 
+	paper-button.geodan:hover {
+		background:var(--geodan-button-hover);
+	}
+	
+	a {
+		text-decoration: none;
+	}
+
+	app-header {
+		height: 80px;
+	}
+
+	app-toolbar {
+		background: var(--geodan-header-background);
+		color: white;
+		--app-toolbar-font-size: 18px;
+		font-family: 'Open Sans light';
+		height: 80px;
+	}
+
+	paper-tab {
+		--paper-tab-ink: var(--geodan-button-normal);
+	}
+
+	paper-tabs {
+		--paper-tabs-selection-bar-color: var(--geodan-button-normal);
+
+	}
+
+	paper-checkbox {
+		--paper-checkbox-unchecked-color: var(--geodan-checkbox-unchecked);
+		--paper-checkbox-unchecked-ink-color: var(--geodan-checkbox-checked);
+		--paper-checkbox-checked-color: var(--geodan-checkbox-checked);
+		--paper-checkbox-checked-ink-color: var(--geodan-checkbox-unchecked);
+		--paper-checkbox-checkmark-color: white;
+	}
+
+	X3D {
+		height: 800px;
+		background: blue;
+	}
  
  </style>
- <template>
- 	<paper-drawer-panel id='menu'>
-		<div drawer>
-			<paper-toolbar class="medium-tall">
-			<div class="title">3D geluidmodel</div>
-			<paper-tabs  class="bottom" selected="{{tabselected}}">
-				<paper-tab>Lagen</paper-tab>
-				<paper-tab>Instellingen</paper-tab>
-			</paper-tabs>
-			</paper-toolbar>
+ <app-drawer-layout fullbleed>
+		<app-drawer slot="drawer" id='menu'>
+		
+			<app-toolbar class="medium-tall">
+				<div bottom-item>
+					<paper-tabs  class="bottom" selected="{{tabselected}}">
+						<paper-tab>Lagen</paper-tab>
+						<paper-tab>Instellingen</paper-tab>
+					</paper-tabs>
+				</div>
+			</app-toolbar>
 			
 			<iron-pages selected=[[tabselected]]>
 				<div>
-					<!--
-					<paper-radio-group selected="{{lodselected}}">
-					<paper-radio-button name='lod1'>LOD1
-							</paper-radio-button>
-					<template is='dom-repeat' items=[[lod1layers]]>
-						<paper-item>
-							<paper-checkbox   on-change='layertoggle' checked=[[item.active]] disabled=[[item.hidden]]>
-									</paper-checkbox>
-							<paper-item-body>
-								<div class="layout horizontal">
-									<span class='flex'>[[item.displayName]]</span>
-									<paper-spinner active=[[item.loading]]></paper-spinner>
-								</div>
-							</paper-item-body>
-						</paper-item>
-					</template>
-					<paper-radio-button name='lod2'>LOD2
-						</paper-radio-button>
-					<template is='dom-repeat' items=[[lod2layers]]>
-						<paper-item>
-							<paper-checkbox   on-change='layertoggle' checked=[[item.active]] disabled=[[item.hidden]]>
-									</paper-checkbox>
-							<paper-item-body>
-								<div class="layout horizontal">
-									<span class='flex'>[[item.displayName]]</span>
-									<paper-spinner active=[[item.loading]]></paper-spinner>
-								</div>
-							</paper-item-body>
-							
-						</paper-item>
-					</template>
-					</paper-radio-group>
-				-->
-					<template is='dom-repeat' items=[[extralayers]]>
+					<template is='dom-repeat' items=[[layers]]>
 							<paper-item>
 								<paper-checkbox on-change='layertoggle' checked=[[item.active]] disabled=[[item.hidden]]>
 										</paper-checkbox>
@@ -125,7 +126,7 @@
 							</paper-item>
 						</template>
 						<a href="./data/geomilieu.zip">
-						<paper-button raised class="indigo">
+						<paper-button raised class="geodan">
 							<iron-icon icon="file-download"></iron-icon>Geomilieu
 						</paper-button>
 						</a>
@@ -135,33 +136,21 @@
 				</div>
 			</iron-pages>
 			
-		</div>
-		<div main>
-		<paper-header-panel class="flex">
-			<paper-toolbar class="medium-tall white" justify='justified'>
-			 	<span class='title'>
-			 		<img src='../images/geodan.png' height='80px'>
-			 	</span>
-			</paper-toolbar>
-			
-			<x3d-viewer 
-				 map={{map}} 
-			>
-			<!--
-				<template is='dom-repeat' items=[[lod1layers]]>
-					<inline id=[[item.name]]> </inline>
-					<x3d-inlinelayer 
-						render=[[item.active]] 
-						map=[[map]]
-						on-loading='_loading'
-						on-loaded='_loaded'
-						url=[[item.url]] 
-						name=[[item.name]]
-						></x3d-inlinelayer>
+		</app-drawer>
+		<app-header-layout fullbleed>
+			<app-header slot="header" class="flex">
+				<app-toolbar class="medium-tall" justify='justified'>
+					<h1>3D geluidmodel</h1>
+				</app-toolbar>
+			</app-header>
+			<div class="flex">
+				<slot></slot>
+				<!--	
 				
-				</template>
-				<template is='dom-repeat' items=[[lod2layers]]>
-						<inline id=[[item.name]]> </inline>
+				<x3d-viewer map={{map}}>
+					<slot></slot>
+					<template is='dom-repeat' items=[[layers]]>
+						<inline id=[[item.name]] load='false'> </inline>
 						<x3d-inlinelayer 
 							render=[[item.active]] 
 							map=[[map]]
@@ -170,197 +159,105 @@
 							url=[[item.url]] 
 							name=[[item.name]]
 							></x3d-inlinelayer>
-					
 					</template>
+				</x3d-viewer>
 			-->
-				<template is='dom-repeat' items=[[extralayers]]>
-							<inline id=[[item.name]] load='false'> </inline>
-							<x3d-inlinelayer 
-								render=[[item.active]] 
-								map=[[map]]
-								on-loading='_loading'
-								on-loaded='_loaded'
-								url=[[item.url]] 
-								name=[[item.name]]
-								></x3d-inlinelayer>
-						
-						</template>
-				
-			</x3d-viewer>
-		</paper-header-panel>
-		</div>
-	</paper-drawer-panel>
- 	
+			</div>
+			<footer>
+					&copy; Geodan
+			</footer>
+		
+	</app-header-layout>
+	
+</app-drawer-layout>
  </template>
  </dom-module>
 
 <script>
 
-Polymer({
-	is: 'main-app',
-	properties: {
-		tabselected: {
-			type: Number,
-			value: 0
-		},
-		lodselected: {
-			type: String,
-			value: 'lod1',
-			//observer: 'lodtoggle'
-		},
-		selectedLayers: {
-			type: Array
-			//observer: '_selectedLayersChanged'
-		},
-		map: {
-			type: Object,
-			observer: '_mapChanged'
-		},
-		lod1layers: {
-			type: Array,
-			value: function(){
-				return [
-					{name: 'buildings',displayName: 'Buildings LOD1', active: true, hidden: true,url: "./data/roofs_lod1.x3d"},
-					{name: 'water', displayName: 'Water', active: true, hidden: true,url: "./data/water.x3d"},
-					{name: 'buildup',displayName: 'Breaklines', active: true, hidden: true,url: "./data/buildup.x3d"},
-				]
+class MainApp extends Polymer.Element {
+	
+	static get is() { return  'main-app';}
+	static get properties() {
+		return {
+			tabselected: {
+				type: Number,
+				value: 0
+			},
+			lodselected: {
+				type: String,
+				value: 'lod1',
+				//observer: 'lodtoggle'
+			},
+			selectedLayers: {
+				type: Array
+				//observer: '_selectedLayersChanged'
+			},
+			map: {
+				type: Object,
+				observer: '_mapChanged'
+			},
+			layers: {
+				type: Array,
+				value: function(){
+					return [
+						{name: 'buildingslod1',displayName: 'Panden detail 1', description: 'Verkennende geluidsstudies', 	 active: false, hidden: false,url: "./data/roofs_lod1.x3d",downloadurl: "./data/roofs_lod1.zip"},
+						{name: 'buildingslod1plus',displayName: 'Panden detail 1+', description: 'Standaard Rekenmethode 2', active: false, hidden: true,url: "./data/roofs_lod1plus.x3d",downloadurl: "./data/roofs_lod1plus.zip"},
+						{name: 'buildingslod2',displayName: 'Panden detail 2', description: '3D Visualisatie' ,			active: true, hidden: false,url: "./data/roofs_lod2.x3d",downloadurl: "./data/roofs_lod2.zip"},
+						{name: 'hardzacht', displayName: 'Hard/Zacht gebieden', description: 'Standaard Rekenmethode 2',active: false, hidden: true,url: "./data/hardzacht.x3d",downloadurl: "./data/hardzacht.zip"},
+						{name: 'hoogtelijnen',displayName: 'Hoogtelijnen', description: 'Standaard Rekenmethode 2', 			active: false, hidden: false,url: "./data/hoogtelijnen.x3d",downloadurl: "./data/hoogtelijnen.zip"},
+						{name: 'terrain', 	displayName: 'Ondergrond BGT', description: '3D Visualisatie', 				active: true, hidden: false,url: "./data/terrain.x3d"},
+						{name: 'roofoutline',displayName: 'Gebouwlijnen', description: '3D Visualisatie',				active: true, hidden: false,url: "./data/roofoutline.x3d"},
+						//{name: 'buildingpoints',displayName: 'Panden puntenwolk', description: '3D Visualisatie',		active: false, hidden: false,url: "./data/buildingpoints.x3d"},
+						{name: 'treepoints',displayName: 'Bomen puntenwolk', description: '3D Visualisatie',			active: true, hidden: false,url: "./data/treepoints.x3d"},
+					];
+				}
 			}
-		},
-		lod2layers: {
-			type: Array,
-			value: function(){
-				return [
-					{name: 'roofplanes',displayName: 'Buildings LOD2', active: false, hidden: true,url: "./data/roofs_lod2.x3d"},
-					{name: 'water', 	displayName: 'Water', active: false, hidden: true,url: "./data/water.x3d"},
-					{name: 'terrain', 	displayName: 'Terrein', active: false, hidden: true,url: "./data/terrain.x3d"},
-				];
-			}
-		},
-		extralayers: {
-			type: Array,
-			value: function(){
-				return [
-					{name: 'buildingslod1',displayName: 'Panden detail 1', description: 'Verkennende geluidsstudies', 	 active: false, hidden: false,url: "./data/roofs_lod1.x3d",downloadurl: "./data/roofs_lod1.zip"},
-					{name: 'buildingslod1plus',displayName: 'Panden detail 1+', description: 'Standaard Rekenmethode 2', active: false, hidden: true,url: "./data/roofs_lod1plus.x3d",downloadurl: "./data/roofs_lod1plus.zip"},
-					{name: 'buildingslod2',displayName: 'Panden detail 2', description: '3D Visualisatie' ,			active: false, hidden: false,url: "./data/roofs_lod2.x3d",downloadurl: "./data/roofs_lod2.zip"},
-					{name: 'hardzacht', displayName: 'Hard/Zacht gebieden', description: 'Standaard Rekenmethode 2',active: false, hidden: true,url: "./data/hardzacht.x3d",downloadurl: "./data/hardzacht.zip"},
-					{name: 'hoogtelijnen',displayName: 'Hoogtelijnen', description: 'Standaard Rekenmethode 2', 			active: false, hidden: false,url: "./data/hoogtelijnen.x3d",downloadurl: "./data/hoogtelijnen.zip"},
-					{name: 'terrain', 	displayName: 'Ondergrond BGT', description: '3D Visualisatie', 				active: false, hidden: false,url: "./data/terrain.x3d"},
-					{name: 'roofoutline',displayName: 'Gebouwlijnen', description: '3D Visualisatie',				active: false, hidden: false,url: "./data/roofoutline.x3d"},
-					//{name: 'buildingpoints',displayName: 'Panden puntenwolk', description: '3D Visualisatie',		active: false, hidden: false,url: "./data/buildingpoints.x3d"},
-					{name: 'treepoints',displayName: 'Bomen puntenwolk', description: '3D Visualisatie',			active: false, hidden: false,url: "./data/treepoints.x3d"},
-				];
-			}
-		}
-		
-		
-	},
-	observers: [
-	],
-	_loading: function(a,b){
+		}	
+	}
+
+	
+	_loading(a,b){
 		var item = a.model.item;
 		//var idx = this.layers.indexOf(a.model.item);
 		//this.set('layers.'+idx+'.loading',true);
-	},
-	_loaded: function(a,b){
+	}
+
+	_loaded(a,b){
 		var item = a.model.item;
 		//var idx = this.layers.indexOf(a.model.item);
 		//this.set('layers.'+idx+'.loading',false);
-	},
+	}
 
-	_isActive: function(item){
+	_isActive(item){
 		return item.active;
-	},
-	_isnothidden: function(item){
+	}
+
+	_isnothidden(item){
 		return !item.hidden;
-	},
-	/*
-	lodtoggle: function(e,d){
-		var self= this;
-		if (e=='lod1' && this.lod1layers){
-			this.lod1layers.forEach(d=>{
-				self.set('lod1layers.'+i+'.active',status);
-				d.active = true;})
-			this.lod2layers.forEach(d=>{d.active = false;})
-		}
-		if (e=='lod2' && this.lod2layers){
-			this.lod1layers.forEach(d=>{d.active = false;})
-			this.lod2layers.forEach(d=>{d.active = true;})
-		}
-	},*/
-	layertoggle: function(e,d){
+	}
+
+	layertoggle(e,d){
 		var self = this;
 		var status = e.target.checked;
 		var layername = e.model.item.name;
-		this.lod1layers.forEach(function(l,i){
+		this.layers.forEach(function(l,i){
 				if (l.name == layername){
-					self.set('lod1layers.'+i+'.active',status);
+					self.set('layers.'+i+'.active',status);
+					d3.select('#'+l.name).attr('render',l.active);
 				}
+				
 		});
-		this.lod2layers.forEach(function(l,i){
-				if (l.name == layername){
-					self.set('lod2layers.'+i+'.active',status);
-				}
-		});
-		this.extralayers.forEach(function(l,i){
-				if (l.name == layername){
-					self.set('extralayers.'+i+'.active',status);
-				}
-		});
-	},
-	_mapChanged: function(map){
-		this._flyTo([122480.60,489444.97],200); //Distelbuurt
-		/*
-		d3.select('#navInfo').attr('type','turntable')
-		.attr('type',"turntable") 
-		.attr('typeParams',"0.0 0.0 0 3")
-		.attr('headlight',"true")
-		.attr('explorationMode',"all")
-		.attr('avatarSize',"0.25,1.6,0.75")
-		.attr('walkDamping',"2")
-		.attr('speed',"1")
-		.attr('transitionTime',"1")
-		.attr('transitionType',"LINEAR");
-		*/
-	},
-
-	_flyTo: function(coords,r){
-		var radius = r || 100;
-		var x = coords[0];
-		var y = coords[1];
-		var bbox = {
-			west: x -radius,
-			east: x +radius,
-			south: y -radius,
-			north: y +radius
-		}
-		var map = self.map;
-		map.dim.minx = parseInt(bbox.west);
-		map.dim.maxx = parseInt(bbox.east);
-		map.dim.miny = parseInt(bbox.south);
-		map.dim.maxy = parseInt(bbox.north);
-		
-		var tiles = map.bbox2tiles(map.dim.getBounds());
-		document.querySelectorAll('x3d-layer').forEach(function(d){
-			d.removeTiles();//TODO make nicer
-			d.tiles = tiles;
-		});
-		
-		map.scene.select("#viewpoint")
-			.attr( "centerOfRotation", coords[0] + " " + coords[1] + " 0" )
-			.attr( "position", coords[0] + " " + coords[1] + " 550")
-			.attr('set_bind',true);
-		
-		document.getElementById('viewpoint').addEventListener('viewpointChanged', this.viewFunc, false);
-	},
-	
-	ready: function(){
-		var self = this;
-		this.addEventListener('goto-rdcoords',function(d){
-      		var coords = d.detail;
-            self._flyTo(coords);
-      	  });
-      	
 	}
-});
+	
+	ready(){
+		super.ready();
+		this.layers.forEach(function(l,i){
+			d3.select('#'+l.name).attr('url',l.url).attr('render',l.active);
+		});
+	}
+
+}
+customElements.define(MainApp.is, MainApp);
+
 </script>
