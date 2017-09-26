@@ -1,4 +1,4 @@
-<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
@@ -30,12 +30,13 @@
 
 <link rel="stylesheet" type="text/css" href="../bower_components/x3dom/x3dom.css" />
 <script src="../bower_components/x3dom/x3dom.js"></script>
+<script src="../bower_components/d3/d3.min.js"></script>
 <!-- import CSS mixin shim -->
 <link rel="import" href="geodan-style.html">
-
+<!--
 <link rel="import" href="../bower_components/x3d-elements/x3d-viewer.html">
 <link rel="import" href="../bower_components/x3d-elements/x3d-inlinelayer.html">
-
+-->
 
 <dom-module id="main-app">
 <template>
@@ -144,7 +145,8 @@
 				</app-toolbar>
 			</app-header>
 			<div class="flex">
-				<slot></slot>
+				<content></content>
+				<!--<slot></slot>-->
 				<!--	
 				
 				<x3d-viewer map={{map}}>
@@ -171,15 +173,18 @@
 	
 </app-drawer-layout>
  </template>
- </dom-module>
+ <!--</dom-module>-->
 
 <script>
 
-class MainApp extends Polymer.Element {
+//class MainApp extends Polymer.Element {
 	
-	static get is() { return  'main-app';}
-	static get properties() {
-		return {
+	//static get is() { return  'main-app';}
+	//static get properties() {
+	//	return {
+Polymer({
+	is: 'main-app',
+	properties: {
 			tabselected: {
 				type: Number,
 				value: 0
@@ -213,51 +218,53 @@ class MainApp extends Polymer.Element {
 					];
 				}
 			}
-		}	
-	}
+	},
+		//}	
+	//}
 
 	
-	_loading(a,b){
+	_loading: function(a,b){
 		var item = a.model.item;
 		//var idx = this.layers.indexOf(a.model.item);
 		//this.set('layers.'+idx+'.loading',true);
-	}
+	},
 
-	_loaded(a,b){
+	_loaded: function(a,b){
 		var item = a.model.item;
 		//var idx = this.layers.indexOf(a.model.item);
 		//this.set('layers.'+idx+'.loading',false);
-	}
+	},
 
-	_isActive(item){
+	_isActive: function(item){
 		return item.active;
-	}
+	},
 
-	_isnothidden(item){
+	_isnothidden: function(item){
 		return !item.hidden;
-	}
+	},
 
-	layertoggle(e,d){
+	layertoggle: function(e,d){
 		var self = this;
 		var status = e.target.checked;
 		var layername = e.model.item.name;
 		this.layers.forEach(function(l,i){
-				if (l.name == layername){
-					self.set('layers.'+i+'.active',status);
-					d3.select('#'+l.name).attr('render',l.active);
-				}
+			if (l.name == layername){
+				self.set('layers.'+i+'.active',status);
+				d3.select('#'+l.name).attr('render',l.active);
+			}
 				
 		});
-	}
+	},
 	
-	ready(){
-		super.ready();
+	ready: function(){
+		//super.ready();
 		this.layers.forEach(function(l,i){
 			d3.select('#'+l.name).attr('url',l.url).attr('render',l.active);
 		});
 	}
 
-}
-customElements.define(MainApp.is, MainApp);
+});
+//customElements.define(MainApp.is, MainApp);
 
 </script>
+</dom-module>

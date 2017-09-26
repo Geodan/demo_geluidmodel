@@ -18,34 +18,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <link rel="shortcut icon" sizes="32x32" href="./images/app-icon-32.png">
 
-  <link rel="stylesheet" type="text/css" href="./bower_components/x3dom/x3dom.css" />
+  <link href="./bower_components/x3dom/x3dom.css" rel="stylesheet" type="text/css" />
   <script src="./bower_components/x3dom/x3dom.js"></script>
-  <script src="./bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="./bower_components/webcomponentsjs/webcomponents-lite.js" shadydom></script>
   <meta name="theme-color" content="#fff">
   
-
-  <script>
-/*
-    // setup Polymer options
-    window.Polymer = {lazyRegister: true};
-
-    // load webcomponents polyfills
-    (function() {
-      if ('registerElement' in document
-          && 'import' in document.createElement('link')
-          && 'content' in document.createElement('template')) {
-        // browser has web components
-      } else {
-        // polyfill web components
-        var e = document.createElement('script');
-        e.src = './bower_components/webcomponentsjs/webcomponents-lite.min.js';
-        document.head.appendChild(e);
-      }
-    })();
-*/
-
-  </script>
-
   <link rel="import" href="./elements/noisemodel-app.html">
 
   <style>
@@ -66,6 +43,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </head>
 <body>
   <main-app>
+      <!-- This x3d element has an issue when added in the shadow dom. That's why it is created in the index -->
+      
       <x3d id="x3delement">
           <Scene class='scene'>
             <Environment 
@@ -100,7 +79,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
            <ViewPoint id='viewpoint'
                  centerOfRotation="122480.60 489444.97 0"
                  position="122480.60 489444.97 550"
-             zNear=30
+             zNear=10
              zFar=1000
              orientation="0 0 0 0"
              ></ViewPoint>
@@ -118,6 +97,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 						<inline id='treepoints'></inline>
           </Scene>
        </x3d>
+      
   </main-app>
 </body>
 </html>
