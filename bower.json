@@ -36,6 +36,6 @@
     "paper-checkbox": "~2",
     "paper-radio-group": "~2",
     "app-layout": "~2",
-    "webcomponentsjs": "^1.0.13"
+    "webcomponentsjs": "~1"
   }
 }
