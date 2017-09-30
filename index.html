@@ -18,6 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <link rel="shortcut icon" sizes="32x32" href="./images/app-icon-32.png">
 
+  <!--Note: using a DEV version of x3dom that fixes turntable zoom -->
   <link href="./lib/x3dom.css" rel="stylesheet" type="text/css" />
   <script src="./lib/x3dom.js"></script>
   <script src="./bower_components/webcomponentsjs/webcomponents-lite.js" shadydom></script>
@@ -69,7 +70,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           ></DirectionalLight>
           <ViewPoint id='viewpoint'
               centerOfRotation="0 0 0"
-              position="0 0 550"
+              position="0 100 350"
               zNear=10
               zFar=1000
           ></ViewPoint>
@@ -97,7 +98,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <inline id='hardzacht'></inline>
               <inline id='hoogtelijnen'></inline>
               <inline id='terrain'></inline>
-              <inline id='roofoutline'></inline>
+              <inline id='roofoutline' render=false load=false></inline>
               <inline id='buildingpoints' render=false load=false></inline>
               <inline id='treepoints'></inline>
         </transform></transform>
