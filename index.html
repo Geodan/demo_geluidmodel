@@ -44,7 +44,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <body>
   <main-app>
       <!-- This x3d element has an issue when added in the shadow dom. That's why it is created in the index -->
-      
       <x3d id="x3delement">
           <Scene class='scene'>
             <Environment 
@@ -59,44 +58,47 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             color='0.1843137254901961 0.3411764705882353 0.47058823529411764'
           ></Fog>
             <Background class="material" 
-              skyColor="0.1843137254901961 0.3411764705882353 0.47058823529411764"
+            skyColor="0.1843137254901961 0.3411764705882353 0.47058823529411764"
             ></Background>
             <DirectionalLight 
-              direction="-0.2 -0.8 -0.4" 
-              intensity="0.7" 
-              shadowIntensity="0" 
-              color="1,1,1" 
-              on="true" 
+            direction="-0.2 -0.8 -0.4" 
+            intensity="0.7" 
+            shadowIntensity="0" 
+            color="1,1,1" 
+            on="true" 
             ></DirectionalLight>
-              <NavigationInfo
-              id='navInfo'
-              headlight='true'
-              type='"examine" "any"'
-              typeParams='0.0 0.0 0.2 1.4'
-              transitionTime='4.0'
-              ></NavigationInfo>
+            <NavigationInfo
+            id='navInfo'
+            headlight='true'
+            type='"examine" "any"'
+            typeParams='0.0 0.0 0.2 1.4'
+            transitionTime='4.0'
+            ></NavigationInfo>
            
            <ViewPoint id='viewpoint'
-                 centerOfRotation="122480.60 489444.97 0"
-                 position="122480.60 489444.97 550"
+               centerOfRotation="122480.60 489444.97 0"
+               position="122480.60 489444.97 550"
              zNear=10
              zFar=1000
              orientation="0 0 0 0"
              ></ViewPoint>
             <transform translation='122480.60 489444.97 200'>
             </transform>
-            <inline id="terrain"></inline>
-            <inline id='buildingslod1'></inline>
-						<inline id='buildingslod1plus'></inline>
-						<inline id='buildingslod2'></inline>
-						<inline id='hardzacht'></inline>
-						<inline id='hoogtelijnen'></inline>
-						<inline id='terrain'></inline>
-						<inline id='roofoutline'></inline>
-						<inline id='buildingpoints' render=false load=false></inline>
-						<inline id='treepoints'></inline>
+            
+          <inline id="terrain"></inline>
+          <inline id='buildingslod1'></inline>
+          <inline id='buildingslod1plus'></inline>
+          <inline id='buildingslod2'></inline>
+          <inline id='hardzacht'></inline>
+          <inline id='hoogtelijnen'></inline>
+          <inline id='terrain'></inline>
+          <inline id='roofoutline'></inline>
+          <inline id='buildingpoints' render=false load=false></inline>
+          <inline id='treepoints'></inline>
+          
           </Scene>
-       </x3d>
+         </x3d>
+      
       
   </main-app>
 </body>
