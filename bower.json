@@ -15,8 +15,7 @@
     "tests"
   ],
   "dependencies": {
-
-    "Polymer": "~1.9",
+    "Polymer": "~1.11",
     "iron-flex-layout": "~1",
     "iron-pages": "~1",
     "iron-icons": "~1",
@@ -37,7 +36,7 @@
     "paper-radio-group": "~1",
     "app-layout": "~1",
     "x3dom": "^1.7.2",
-    "d3": "^4.10.2"
-
+    "d3": "^4.10.2",
+    "mapbox-gl": "https://github.com/PolymerVis/mapbox-gl.git#1.0.9"
   }
 }

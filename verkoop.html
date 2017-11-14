@@ -1,0 +1,45 @@
+<!--
+@license geodan
+
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <title>X3D viewer</title>
+
+  <link rel="shortcut icon" sizes="32x32" href="./images/app-icon-32.png">
+
+  <!--Note: using a DEV version of x3dom that fixes turntable zoom -->
+  <link href="./lib/x3dom.css" rel="stylesheet" type="text/css" />
+  <script src="./lib/x3dom.js"></script>
+  <script src="./bower_components/webcomponentsjs/webcomponents-lite.js" shadydom></script>
+  <meta name="theme-color" content="#fff">
+  
+  <link rel="import" href="./elements/verkoop-app.html">
+
+  <style>
+
+    body {
+      margin: 0;
+      font-family: 'Roboto', 'Noto', sans-serif;
+      background-color: white;
+    }
+    #x3delement {
+      width: 100%;
+      height: 100%;
+    }
+    
+
+  </style>
+
+</head>
+<body>
+  <main-app>
+      
+  </main-app>
+</body>
+</html>
