@@ -161,8 +161,8 @@
                     map-style="mapbox://styles/mapbox/basic-v9"
                     script-src="https://api.mapbox.com/mapbox-gl-js/v0.32.1/mapbox-gl.js"
                     access-token="pk.eyJ1IjoiZXRlcm5hMiIsImEiOiJjaXppZjRoaTIwMmYxMndsNHJ4dzR1eWJsIn0.MvJ5fsV47RHlSAt2fBEKLg"
-                    latitude=51.105840
-                    longitude=5.865311
+                    latitude=52.25993
+                    longitude=4.55382
                     zoom=14
                     pitch=45
                     bearing=0></mapbox-gl>
@@ -299,21 +299,20 @@ Polymer({
             }); 
 
 
-            map.addSource("buildings", {
+            map.addSource("odwh", {
                 type: 'vector',
-                tiles:["http://metis:3011/mvt/buildings/{z}/{x}/{y}.mvt"],
+                tiles:["http://metis:3011/mvt/odwh/{z}/{x}/{y}.mvt"],
                 minzoom: 13,
                 maxzoom: 18
             });
             map.addLayer({
                 'id': 'building-extrusion',
                 'type': 'fill-extrusion',
-                'source': 'buildings',
-                "source-layer": "buildings",
-
+                'source': 'odwh',
+                "source-layer": "odwh",
                 'paint': {
                     'fill-extrusion-color': {
-                        "property": "relh_new",
+                        "property": "relhoogte",
                         "stops": [
                         [0, 'hsl(203,73%,67%)'],
                         [1, 'hsl(187,56%,69%)'],
@@ -332,7 +331,7 @@ Polymer({
                         ]
                     },
                     'fill-extrusion-height': {
-                        'property': 'relh_new',
+                        'property': 'relhoogte',
                         'type': 'identity'
                     },
                     'fill-extrusion-opacity': 0.8
